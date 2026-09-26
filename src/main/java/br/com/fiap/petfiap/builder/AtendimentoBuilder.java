@@ -44,6 +44,12 @@ public class AtendimentoBuilder {
         if (petPorte == null || petPorte.isBlank()) {
             throw new IllegalArgumentException("Porte do pet ausente");
         }
+        if (!"PEQUENO".equals(petPorte) && !"MEDIO".equals(petPorte) && !"GRANDE".equals(petPorte)) {
+            throw new IllegalArgumentException("Porte invalido: " + petPorte);
+        }
+        if (dataHora == null) {
+            throw new IllegalArgumentException("Data e hora do atendimento ausente");
+        }
         return AtendimentoFactory.criar(protocolo, tipo, petNome, petPorte, tutorNome, dataHora);
     }
 }

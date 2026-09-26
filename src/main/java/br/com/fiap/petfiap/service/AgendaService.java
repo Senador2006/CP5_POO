@@ -3,6 +3,7 @@ package br.com.fiap.petfiap.service;
 import br.com.fiap.petfiap.exception.AtendimentoNaoEncontradoException;
 import br.com.fiap.petfiap.exception.HorarioOcupadoException;
 import br.com.fiap.petfiap.model.Atendimento;
+import br.com.fiap.petfiap.model.GeradorProtocolo;
 import br.com.fiap.petfiap.repository.AtendimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,30 @@ public class AgendaService {
 
     private final AtendimentoRepository repository;
 
+    // Uma gravacao por vez: duas requests nao passam juntas pela checagem de horario.
+    private final Object agendaLock = new Object();
+
     @Autowired
     public AgendaService(AtendimentoRepository repository) {
         this.repository = repository;
     }
 
     // Agenda um novo atendimento: recusa horario ja ocupado pelo mesmo pet.
+    // Protocolo 0 significa "ainda nao numerado": o numero so sai depois da validacao.
     public Atendimento agendar(Atendimento novo) {
+        synchronized (agendaLock) {
+            validarAgendamento(novo);
+            if (novo.getProtocolo() <= 0) {
+                novo.setProtocolo(GeradorProtocolo.getInstancia().proximo());
+            }
+            return repository.save(novo);
+        }
+    }
+
+    private void validarAgendamento(Atendimento novo) {
+        if (novo.getDataHora() == null) {
+            throw new IllegalArgumentException("Data e hora do atendimento ausente");
+        }
         if (novo.getDataHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Nao e possivel agendar atendimento no passado");
         }
@@ -34,7 +52,6 @@ public class AgendaService {
                         "Pet " + novo.getPetNome() + " ja possui atendimento agendado nesse horario");
             }
         }
-        return repository.save(novo);
     }
 
     // Busca pelo id; nunca retorna null, o orElseThrow garante a excecao.

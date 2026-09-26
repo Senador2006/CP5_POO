@@ -5,7 +5,6 @@ import br.com.fiap.petfiap.exception.HorarioOcupadoException;
 import br.com.fiap.petfiap.exception.StatusInvalidoException;
 import br.com.fiap.petfiap.builder.AtendimentoBuilder;
 import br.com.fiap.petfiap.model.Atendimento;
-import br.com.fiap.petfiap.model.GeradorProtocolo;
 import br.com.fiap.petfiap.service.AgendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,13 +37,13 @@ public class AtendimentoController {
             @RequestParam String tutorNome,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataHora) {
         try {
-            int protocolo = GeradorProtocolo.getInstancia().proximo();
+            // Protocolo 0: o service numera so depois de aceitar data, porte e horario.
             Atendimento atendimento = new AtendimentoBuilder()
                     .comTipo(tipo)
                     .comPet(petNome, porte)
                     .comTutor(tutorNome)
                     .comDataHora(dataHora)
-                    .construir(protocolo);
+                    .construir(0);
             return ResponseEntity.status(HttpStatus.CREATED).body(service.agendar(atendimento));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

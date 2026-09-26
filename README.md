@@ -5,14 +5,17 @@
 
 ## Identificação
 
-**Grupo:** preencher
+**Grupo:** 35
 
-| Integrante | RM | Turma |
-|---|---|---|
-| preencher | | |
-| | | |
-| | | |
-| | | |
+| Integrante                        | RM     | Turma |
+| --------------------------------- | ------ | ----- |
+| Thiago Ono Sakai                  | 563448 | 2CCPO |
+| Gabriel Nacarelli                 | 565298 | 2CCPO |
+| Luiz Claro Lima                   | 563014 | 2CCPO |
+| Lucas Franco de Godoy Fortes      | 561723 | 2CCPO |
+| Rafael Silva Oliveira Nascimento  | 565415 | 2CCPO |
+| Pedro Mitsuo Risardi Nisiaymamoto | 561710 | 2CCPO |
+| Pedro Noronha dos Santos          | 564572 | 2CCPO |
 
 | Campo | |
 |---|---|
@@ -140,4 +143,11 @@ rodou daqui tem 26 testes e 0 falhas.
 O bug12 não aparece em teste de unidade: o repositório é mock e o save nem
 chega no JPA. Só aparece lendo o @Id. A API não foi subida contra o Oracle
 da FIAP porque as credenciais ainda são SEU_RM / SUA_SENHA.
+
+Depois da revisão, fechei três furos que a suíte não vê: proximo() passou a
+ser synchronized; o controller manda protocolo 0 e o AgendaService só chama
+o singleton depois que data, porte e horário passam; agendar inteiro roda
+dentro de um lock, para duas requests não gravarem o mesmo horário. Porte
+fora de PEQUENO, MEDIO e GRANDE e data ausente agora lançam
+IllegalArgumentException. A herança JPA foi marcada como SINGLE_TABLE.
 ```

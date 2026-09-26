@@ -20,7 +20,7 @@ public class GeradorProtocolo {
         return instancia;
     }
 
-    public int proximo() {
+    public synchronized int proximo() {
         contador++;
         return contador;
     }

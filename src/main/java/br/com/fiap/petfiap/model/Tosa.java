@@ -28,8 +28,10 @@ public class Tosa extends Atendimento {
             return 70.0;
         } else if ("MEDIO".equals(getPetPorte())) {
             return 90.0;
+        } else if ("GRANDE".equals(getPetPorte())) {
+            return 120.0;
         }
-        return 120.0;
+        throw new IllegalArgumentException("Porte invalido: " + getPetPorte());
     }
 
     @Override

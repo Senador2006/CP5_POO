@@ -28,8 +28,10 @@ public class Banho extends Atendimento {
             return 60.0;
         } else if ("MEDIO".equals(getPetPorte())) {
             return 80.0;
+        } else if ("GRANDE".equals(getPetPorte())) {
+            return 100.0;
         }
-        return 100.0;
+        throw new IllegalArgumentException("Porte invalido: " + getPetPorte());
     }
 
     @Override

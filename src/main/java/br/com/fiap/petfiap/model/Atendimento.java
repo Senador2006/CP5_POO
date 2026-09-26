@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 // As regras de preco, pontos e duracao moram nas subclasses (polimorfismo).
 @Entity
 @Table(name = "atendimentos")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Atendimento {
 
     @Id
